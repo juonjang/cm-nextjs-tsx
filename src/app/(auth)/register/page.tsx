@@ -1,18 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client'
-
-import { Box, Button, Card, CardContent, CardMedia, InputAdornment, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import * as Icons from "@mui/icons-material/";
-import router from 'next/router';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm } from 'react-hook-form';
-import { Controller } from "react-hook-form";
+import React from "react";
+import { Controller, useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
-// import { useSelector } from "react-redux";
-// import { add, signUp, userSelector } from "@/src/store/slices/userSlice";
-// import { useAppDispatch } from "@/src/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { add, signUp, userSelector } from "@/src/store/slices/userSlice";
+import { useAppDispatch } from "@/src/store/store";
 
 
 interface User {
@@ -20,13 +27,11 @@ interface User {
   password: string;
 }
 
-
-
-
-type Props = {}
+type Props = {};
 
 export default function Register({ }: Props) {
   const router = useRouter();
+ 
 
   const initialValue: User = { username: " username ", password: "" };
   const formValidateSchema = Yup.object().shape({
@@ -41,12 +46,21 @@ export default function Register({ }: Props) {
      resolver:yupResolver(formValidateSchema),
   });
 
-
+  const reducer = useSelector(userSelector);
+  const dispatch = useAppDispatch();
+  
   const showForm = () => {
     return (
-      <form onSubmit={handleSubmit((value:User)=>{
-        alert(JSON.stringify(value))
-      })}>
+      <form 
+      onSubmit={handleSubmit(async (value: User) => {
+        const result = await dispatch(signUp(value));
+        if (signUp.fulfilled.match(result)) {
+          alert("Register successfully");
+        } else if (signUp.rejected.match(result)) {
+          alert("Register failed");
+        }
+      })}
+      >
         {/* Username */}
         <Controller
           name='username'

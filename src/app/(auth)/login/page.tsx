@@ -9,6 +9,9 @@ import { useForm } from 'react-hook-form';
 import { Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { useRouter } from 'next/navigation';
+import reducer,{ add, userSelector }  from '@/src/store/slices/userSlice';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '@/src/store/store';
 // import { useSelector } from "react-redux";
 // import { add, signUp, userSelector } from "@/src/store/slices/userSlice";
 // import { useAppDispatch } from "@/src/store/store";
@@ -32,6 +35,11 @@ export default function Login({ }: Props) {
     username: Yup.string().required("Username is required").trim(),
     password: Yup.string().required("Password is required").trim(),
   });
+
+ const reducer = useSelector(userSelector);
+ const dispatch = useAppDispatch();
+
+
   const { control,
     handleSubmit,
      formState:{errors,}
@@ -112,12 +120,13 @@ export default function Login({ }: Props) {
           color="primary"
         // disabled={reducer.status == "fetching"}
         >
-          Login
+          Login 
         </Button>
 
         <Button
           className="mt-4"
            onClick={() => {
+            dispatch(add());
             router.push("/register");
           }}
           type="button"
@@ -140,8 +149,8 @@ export default function Login({ }: Props) {
         // title="Contemplative Reptile"
         />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            Login
+          <Typography gutterBottom variant="h5" component="h2" >
+            MIS NB-HOSPITAL  ({ reducer.count})
           </Typography>
           {showForm()}
         </CardContent>

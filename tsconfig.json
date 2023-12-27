@@ -23,9 +23,10 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./*"],
+      "@/components/*": ["./src/app/_components/*"],
+      "@/store/*": ["./src/store/*"],
+      "@/utils/*": ["./src/utils/*"]
     }
   },
   "include": [
